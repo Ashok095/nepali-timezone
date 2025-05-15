@@ -7,10 +7,16 @@ import nepali_datetime
 from django.utils import timezone
 from .utils import get_default_timezone
 
+
 class NepaliDateTime:
     """A timezone-aware Nepali datetime class using Bikram Sambat calendar."""
-    def __init__(self, year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None):
-        self._nepali_dt = nepali_datetime.datetime(year, month, day, hour, minute, second, microsecond)
+
+    def __init__(
+        self, year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None
+    ):
+        self._nepali_dt = nepali_datetime.datetime(
+            year, month, day, hour, minute, second, microsecond
+        )
         self._tzinfo = tzinfo or get_default_timezone()
 
     @classmethod
@@ -31,7 +37,9 @@ class NepaliDateTime:
         )
 
     @classmethod
-    def from_gregorian(cls, year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None):
+    def from_gregorian(
+        cls, year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None
+    ):
         """Create NepaliDateTime from Gregorian date."""
         gregorian_dt = datetime(year, month, day, hour, minute, second, microsecond)
         if tzinfo:
@@ -87,7 +95,10 @@ class NepaliDateTime:
         return self._tzinfo
 
     def __str__(self):
-        return self._nepali_dt.strftime("%Y-%m-%d %H:%M:%S") + f" {self._tzinfo.tzname(None)}"
+        return (
+            self._nepali_dt.strftime("%Y-%m-%d %H:%M:%S")
+            + f" {self._tzinfo.tzname(None)}"
+        )
 
     def __add__(self, other):
         if isinstance(other, dt_timedelta):
@@ -101,41 +112,49 @@ class NepaliDateTime:
             return NepaliDateTime.from_datetime(gregorian_dt)
         return NotImplemented
 
+
 def is_aware(dt):
     """Check if a datetime or NepaliDateTime is timezone-aware."""
     if isinstance(dt, NepaliDateTime):
-        return dt.tzinfo is not None and dt.tzinfo.utcoffset(dt.to_datetime()) is not None
+        return (
+            dt.tzinfo is not None and dt.tzinfo.utcoffset(dt.to_datetime()) is not None
+        )
     return timezone.is_aware(dt)
+
 
 def is_naive(dt):
     """Check if a datetime or NepaliDateTime is naive."""
     return not is_aware(dt)
 
-def make_aware(dt, timezone=None):
+
+def make_aware(dt, tz=None):
     """Make a naive datetime or NepaliDateTime timezone-aware."""
     if is_aware(dt):
         return dt
-    tz = timezone or get_default_timezone()
+    tzinfo = tz or get_default_timezone()
     if isinstance(dt, NepaliDateTime):
         gregorian_dt = dt.to_datetime()
-        aware_dt = timezone.make_aware(gregorian_dt, tz)
+        aware_dt = timezone.make_aware(gregorian_dt, tzinfo)
         return NepaliDateTime.from_datetime(aware_dt)
-    return NepaliDateTime.from_datetime(timezone.make_aware(dt, tz))
+    return NepaliDateTime.from_datetime(timezone.make_aware(dt, tzinfo))
 
-def make_naive(dt, timezone=None):
+
+def make_naive(dt, tz=None):
     """Make an aware datetime or NepaliDateTime timezone-naive."""
     if is_naive(dt):
         return dt
-    tz = timezone or get_default_timezone()
+    tzinfo = tz or get_default_timezone()
     if isinstance(dt, NepaliDateTime):
         gregorian_dt = dt.to_datetime()
-        naive_dt = timezone.make_naive(gregorian_dt, tz)
+        naive_dt = timezone.make_naive(gregorian_dt, tzinfo)
         return NepaliDateTime.from_datetime(naive_dt)
-    return NepaliDateTime.from_datetime(timezone.make_naive(dt, tz))
+    return NepaliDateTime.from_datetime(timezone.make_naive(dt, tzinfo))
+
 
 def now():
     """Return current NepaliDateTime."""
     return NepaliDateTime.now()
+
 
 def timedelta(**kwargs):
     """Return a standard timedelta for use with NepaliDateTime."""
