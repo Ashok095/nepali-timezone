@@ -1,0 +1,44 @@
+/* Nepali DateTime widget styles */
+
+.nepali-datetime-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nepali-datetime-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Calendar popup styles */
+.nepali-date-picker {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nepali-date-picker .header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+}
+
+.nepali-date-picker .day {
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.nepali-date-picker .day:hover {
+    background-color: #e9ecef;
+}
+
+.nepali-date-picker .selected {
+    background-color: #007bff;
+    color: white;
+}

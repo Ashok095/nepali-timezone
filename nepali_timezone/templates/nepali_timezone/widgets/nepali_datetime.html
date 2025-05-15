@@ -1,0 +1,9 @@
+{% include "django/forms/widgets/datetime.html" %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const input = document.getElementById("{{ widget.attrs.id }}");
+    if (input) {
+      input.classList.add("nepali-datetime-input");
+    }
+  });
+</script>
