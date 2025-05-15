@@ -14,39 +14,7 @@ class NepaliDateTimeField(serializers.Field):
 
     def __init__(self, *args, **kwargs):
         self.format = kwargs.pop("format", "%Y-%m-%d %H:%M:%S %Z")
-        # Validate format string compatibility with nepali_datetime
-        self._validate_format_string(self.format)
         super().__init__(*args, **kwargs)
-
-    def _validate_format_string(self, format_str):
-        """Validate that the format string is compatible with nepali_datetime."""
-        # List of format codes known to be supported by nepali_datetime
-        supported_codes = [
-            "%Y",
-            "%m",
-            "%d",
-            "%H",
-            "%M",
-            "%S",
-            "%f",
-            "%y",
-            "%b",
-            "%B",
-            "%a",
-            "%A",
-            "%I",
-            "%p",
-        ]
-
-        # Simple validation - check if any unsupported codes are used
-        for i, char in enumerate(format_str):
-            if char == "%" and i + 1 < len(format_str):
-                code = "%" + format_str[i + 1]
-                if code not in supported_codes and format_str[i + 1] not in "Z":
-                    # Z is handled separately for timezone
-                    raise ValueError(
-                        f"Format code {code} may not be supported by nepali_datetime"
-                    )
 
     def to_representation(self, value):
         if value is None:
@@ -59,11 +27,7 @@ class NepaliDateTimeField(serializers.Field):
                 return None
 
         try:
-            # Handle %Z separately if needed
-            if "%Z" in self.format:
-                base_format = self.format.replace("%Z", "")
-                formatted = value._nepali_dt.strftime(base_format)
-                return formatted + value.tzinfo.tzname(None)
+            # Rely on nepali_datetime's strftime for all formatting
             else:
                 return value._nepali_dt.strftime(self.format)
         except ValueError as e:
